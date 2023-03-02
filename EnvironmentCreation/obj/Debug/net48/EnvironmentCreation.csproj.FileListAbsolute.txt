@@ -1,0 +1,11 @@
+D:\华东院\平面生成\EnvironmentCreation\EnvironmentCreation\bin\Debug\net48\EnvironmentCreation.gha
+D:\华东院\平面生成\EnvironmentCreation\EnvironmentCreation\bin\Debug\net48\EnvironmentCreation.pdb
+D:\华东院\平面生成\EnvironmentCreation\EnvironmentCreation\obj\Debug\net48\EnvironmentCreation.csproj.AssemblyReference.cache
+D:\华东院\平面生成\EnvironmentCreation\EnvironmentCreation\obj\Debug\net48\EnvironmentCreation.GeneratedMSBuildEditorConfig.editorconfig
+D:\华东院\平面生成\EnvironmentCreation\EnvironmentCreation\obj\Debug\net48\EnvironmentCreation.AssemblyInfoInputs.cache
+D:\华东院\平面生成\EnvironmentCreation\EnvironmentCreation\obj\Debug\net48\EnvironmentCreation.AssemblyInfo.cs
+D:\华东院\平面生成\EnvironmentCreation\EnvironmentCreation\obj\Debug\net48\EnvironmentCreation.csproj.CoreCompileInputs.cache
+D:\华东院\平面生成\EnvironmentCreation\EnvironmentCreation\obj\Debug\net48\EnvironmentCreation.gha
+D:\华东院\平面生成\EnvironmentCreation\EnvironmentCreation\obj\Debug\net48\EnvironmentCreation.pdb
+D:\华东院\平面生成\EnvironmentCreation\EnvironmentCreation\obj\Debug\net48\EnvironmentCreation.Properties.Resources.resources
+D:\华东院\平面生成\EnvironmentCreation\EnvironmentCreation\obj\Debug\net48\EnvironmentCreation.csproj.GenerateResource.cache

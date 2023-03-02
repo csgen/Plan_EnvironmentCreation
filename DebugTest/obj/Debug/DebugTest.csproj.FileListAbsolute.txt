@@ -1,0 +1,8 @@
+D:\华东院\平面生成\EnvironmentCreation\DebugTest\bin\Debug\DebugTest.exe.config
+D:\华东院\平面生成\EnvironmentCreation\DebugTest\bin\Debug\DebugTest.exe
+D:\华东院\平面生成\EnvironmentCreation\DebugTest\bin\Debug\DebugTest.pdb
+D:\华东院\平面生成\EnvironmentCreation\DebugTest\obj\Debug\DebugTest.csproj.AssemblyReference.cache
+D:\华东院\平面生成\EnvironmentCreation\DebugTest\obj\Debug\DebugTest.csproj.SuggestedBindingRedirects.cache
+D:\华东院\平面生成\EnvironmentCreation\DebugTest\obj\Debug\DebugTest.csproj.CoreCompileInputs.cache
+D:\华东院\平面生成\EnvironmentCreation\DebugTest\obj\Debug\DebugTest.exe
+D:\华东院\平面生成\EnvironmentCreation\DebugTest\obj\Debug\DebugTest.pdb
