@@ -43,15 +43,22 @@ namespace EnvironmentCreation
             box.Union(this.endPoint);
             Plane boxScalePlane = Plane.WorldXY;
             boxScalePlane.Origin = box.Center;
-            box.Transform(Transform.Scale(boxScalePlane, 2, 2, 1));
-            Interval domainX = box.X;
-            Interval domainY = box.Y;
+            Point3d ctPt = box.Center;
+            Interval nbX = new Interval(ctPt.X - (ctPt.X - box.X.T0) * 2, ctPt.X + (box.X.T1 - ctPt.X) * 2);
+            Interval nbY = new Interval(ctPt.Y - (ctPt.Y - box.Y.T0) * 2, ctPt.Y + (box.Y.T1 - ctPt.Y) * 2);
+            //box = new Box(new Plane(ctPt, Vector3d.ZAxis), nbX, nbY, new Interval(0, 0));
+            Box newbox = BoxCenterScale(box, 2, 2, 1);
+            
+            //box.Transform(Transform.Scale(tPlane,2));
+            Interval domainX = newbox.X;
+            Interval domainY = newbox.Y;
             double length = domainX.Length;
             double width = domainY.Length;
             double distance = this.startPoint.DistanceTo(this.endPoint);
             double DPI = distance / this.resolution;
-            worldLength = Math.Max((int)((length - length % DPI) / DPI), 4);
-            worldWidth = Math.Max((int)((width - width % DPI) / DPI), 4);
+
+            worldLength = Math.Max((int)Math.Ceiling((length - length % DPI) / DPI), 4);
+            worldWidth = Math.Max((int)Math.Ceiling((width - width % DPI) / DPI), 4);
             List<Interval> segX = DivideDomain(domainX, worldLength);
             List<Interval> segY = DivideDomain(domainY, worldWidth);
             worldLength += 6;
@@ -133,6 +140,7 @@ namespace EnvironmentCreation
                 for(int y = 0; y < worldWidth; y++)
                 {
                     Grids[x, y].Transform(Transform.Scale(startPtPlane, scaleX, scaleY, 1));
+                    //Grids[x, y] = RecScale(Grids[x, y], startPtPlane, scaleX, scaleY);
                 }
             }
         }
@@ -177,6 +185,91 @@ namespace EnvironmentCreation
                 bBox.Union(bbObj);
             }
             return bBox;
+        }
+        private Box BoxCenterScale(Box box, double scaleX, double scaleY, double scaleZ)
+        {
+            Point3d centerPoint = box.Center;
+            Interval oX = box.X;
+            Interval oY = box.Y;
+            Interval oZ = box.Z;
+            Interval newX = new Interval(centerPoint.X - (centerPoint.X - oX.T0) * scaleX, centerPoint.X + (oX.T1 - centerPoint.X) * scaleX);
+            Interval newY = new Interval(centerPoint.Y - (centerPoint.Y - oY.T0) * scaleY, centerPoint.Y + (oY.T1 - centerPoint.Y) * scaleY);
+            Interval newZ = new Interval(centerPoint.Z - (centerPoint.Z - oZ.T0) * scaleZ, centerPoint.Z + (oX.T1 - centerPoint.Z) * scaleZ);
+            return new Box(new Plane(centerPoint,Vector3d.ZAxis), newX, newY, newZ);
+        }
+        private Rectangle3d RecScale(Rectangle3d rec, Plane scalePlane, double scaleX, double scaleY)
+        {
+            Point3d anchorPoint = scalePlane.Origin;
+            double anchorX = anchorPoint.X;
+            double anchorY = anchorPoint.Y;
+            double anchorZ = anchorPoint.Z;
+            Interval oX = rec.X;
+            Interval oY = rec.Y;
+            Point3d recCenter = rec.Center;
+            double iX0 = Math.Abs(oX.T0 - anchorX) * scaleX;//i means:implement for increasing or decreasing from original x
+            double iX1 = Math.Abs(oX.T1 - anchorX) * scaleX;
+            double iY0 = Math.Abs(oY.T1 - anchorY) * scaleY;
+            double iY1 = Math.Abs(oY.T1 - anchorY) * scaleY;
+            double newX0 = 0, newX1 = 0;//new bounds for x interval
+            double newY0 = 0, newY1 = 0;
+            if (anchorX > oX.T0)
+            {
+                newX0 = anchorX - iX0;
+            }
+            else
+            {
+                newX0 = anchorX + iX0;
+            }
+            if (anchorX > oX.T1)
+            {
+                newX1 = anchorX - iX1;
+            }
+            else
+            {
+                newX1 = anchorX + iX1;
+            }//new x interval complete
+
+            if (anchorY > oY.T0)
+            {
+                newY0 = anchorY - iY0;
+            }
+            else
+            {
+                newY0 = anchorY + iY0;
+            }
+            if (anchorY > oY.T1)
+            {
+                newY1 = anchorY - iY1;
+            }
+            else
+            {
+                newY1 = anchorY + iY1;
+            }//new y interval complete
+            Interval newX = new Interval(newX0, newX1);
+            Interval newY = new Interval(newY0, newY1);
+
+            double newRecCenterX = 0, newRecCenterY = 0;
+            double iCenterX = Math.Abs(recCenter.X - anchorX) * scaleX;
+            double iCenterY = Math.Abs(recCenter.Y - anchorY) * scaleY;
+            if (anchorX > recCenter.X)
+            {
+                newRecCenterX = anchorX - iCenterX;
+            }
+            else
+            {
+                newRecCenterX = anchorX + iCenterX;
+            }
+            if (anchorY > recCenter.Y)
+            {
+                newRecCenterY = anchorY - iCenterY;
+            }
+            else
+            {
+                newRecCenterY = anchorY + iCenterY;
+            }
+
+            Plane newRecPlane = new Plane(new Point3d(newRecCenterX, newRecCenterY, recCenter.Z), Vector3d.ZAxis);
+            return new Rectangle3d(newRecPlane, newX, newY);
         }
         //public Rectangle3d GridPoint()
         //{

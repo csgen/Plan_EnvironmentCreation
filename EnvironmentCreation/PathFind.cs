@@ -74,48 +74,52 @@ namespace EnvironmentCreation
                 {
                     int x = curBestFgh.x + dir[i, 0];
                     int y = curBestFgh.y + dir[i, 1];
-                    if (1 <= x && x < mapMaxW && 1 <= y && y < mapMaxH && (mapRef[x, y] == roadValue || (x == endPointX && y == endPointY)))
+                    if(0<=x && x<mapMaxW && 0<=y && y < mapMaxH)
                     {
-                        //fgh
-                        int father_g = curBestFgh.father != null ? curBestFgh.father.g : 0;
-                        int g = father_g + ((x != curBestFgh.x && y != curBestFgh.y) ? 14 : 10);
-                        int h = 0;
-                        if (isFourDir)
+                        if (mapRef[x, y] == roadValue || (x == endPointX && y == endPointY))
                         {
-                            h = (Math.Abs(x - endPointX) + Math.Abs(y - endPointY)) * 10;
-                        }
-                        else
-                        {
-                            int dx = Math.Abs(x - endPointX);
-                            int dy = Math.Abs(y - endPointY);
-                            int minD = Math.Min(dx, dy);
-                            int maxD = Math.Max(dx, dy);
-                            h = minD * 14 + (maxD - minD) * 10;
-                        }
-                        int f = g + h;//f=到起点步数g+到终点步数h
-                        Fgh cFgh = new Fgh(x, y, g, h, f, curBestFgh);
+                            //fgh
+                            int father_g = curBestFgh.father != null ? curBestFgh.father.g : 0;
+                            int g = father_g + ((x != curBestFgh.x && y != curBestFgh.y) ? 14 : 10);
+                            int h = 0;
+                            if (isFourDir)
+                            {
+                                h = (Math.Abs(x - endPointX) + Math.Abs(y - endPointY)) * 10;
+                            }
+                            else
+                            {
+                                int dx = Math.Abs(x - endPointX);
+                                int dy = Math.Abs(y - endPointY);
+                                int minD = Math.Min(dx, dy);
+                                int maxD = Math.Max(dx, dy);
+                                h = minD * 14 + (maxD - minD) * 10;
+                            }
+                            int f = g + h;//f=到起点步数g+到终点步数h
+                            Fgh cFgh = new Fgh(x, y, g, h, f, curBestFgh);
 
-                        //Add or Remove fgh
-                        Fgh openFgh;
-                        Fgh closeFgh;
-                        int openIndex;
-                        int closeIndex;
-                        this.FindFghByList(tOpenList, x, y, out openFgh, out openIndex);
-                        this.FindFghByList(tCloseList, x, y, out closeFgh, out closeIndex);
-                        if (openFgh == null && closeFgh == null)
-                        {
-                            tOpenList.Add(cFgh);
-                        }
-                        else if (openFgh != null)
-                        {
-                            if (openFgh.f > cFgh.f) tOpenList[openIndex] = cFgh;
-                        }
-                        else if (closeFgh.f > cFgh.f)
-                        {
-                            tOpenList.Add(cFgh);
-                            tCloseList.RemoveAt(closeIndex);
+                            //Add or Remove fgh
+                            Fgh openFgh;
+                            Fgh closeFgh;
+                            int openIndex;
+                            int closeIndex;
+                            this.FindFghByList(tOpenList, x, y, out openFgh, out openIndex);
+                            this.FindFghByList(tCloseList, x, y, out closeFgh, out closeIndex);
+                            if (openFgh == null && closeFgh == null)
+                            {
+                                tOpenList.Add(cFgh);
+                            }
+                            else if (openFgh != null)
+                            {
+                                if (openFgh.f > cFgh.f) tOpenList[openIndex] = cFgh;
+                            }
+                            else if (closeFgh.f > cFgh.f)
+                            {
+                                tOpenList.Add(cFgh);
+                                tCloseList.RemoveAt(closeIndex);
+                            }
                         }
                     }
+                    
                 }
                 tCloseList.Add(curBestFgh);
             }
