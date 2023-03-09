@@ -34,20 +34,37 @@ namespace EnvironmentCreation
             this.Obstacles = Obstacles;
             startLocation = startPoint;
             endLocation = endPoint;
+            Curve seBox = new Rectangle3d(Plane.WorldXY, startPoint, endPoint).ToNurbsCurve();
+            bool meetObstacle = false;
+            
+            foreach(Curve obstacle in Obstacles)
+            {
+                if (Curve.PlanarCurveCollision(seBox,obstacle,Plane.WorldXY,0.001))
+                    meetObstacle = true;
+            }
 
+            Box newbox;
+            if (meetObstacle == false)
+            {
+                newbox = new Box(new BoundingBox(startPoint, endPoint));
+            }
+            else
+            {
+                //Rectangle3d rect = new Rectangle3d(Plane.WorldXY, this.pt1, this.pt2);
+                Box box = new Box(GetObstacleBox(Obstacles));
+                //Box box2 = new Box(Plane.WorldXY, new Point3d[] { this.startPoint, this.endPoint });
+                box.Union(this.startPoint);
+                box.Union(this.endPoint);
+                Plane boxScalePlane = Plane.WorldXY;
+                boxScalePlane.Origin = box.Center;
+                Point3d ctPt = box.Center;
+                Interval nbX = new Interval(ctPt.X - (ctPt.X - box.X.T0) * 2, ctPt.X + (box.X.T1 - ctPt.X) * 2);
+                Interval nbY = new Interval(ctPt.Y - (ctPt.Y - box.Y.T0) * 2, ctPt.Y + (box.Y.T1 - ctPt.Y) * 2);
+                //box = new Box(new Plane(ctPt, Vector3d.ZAxis), nbX, nbY, new Interval(0, 0));
+                newbox = BoxCenterScale(box, 2, 2, 1);
+            }
 
-            //Rectangle3d rect = new Rectangle3d(Plane.WorldXY, this.pt1, this.pt2);
-            Box box = new Box(GetObstacleBox(Obstacles));
-            //Box box2 = new Box(Plane.WorldXY, new Point3d[] { this.startPoint, this.endPoint });
-            box.Union(this.startPoint);
-            box.Union(this.endPoint);
-            Plane boxScalePlane = Plane.WorldXY;
-            boxScalePlane.Origin = box.Center;
-            Point3d ctPt = box.Center;
-            Interval nbX = new Interval(ctPt.X - (ctPt.X - box.X.T0) * 2, ctPt.X + (box.X.T1 - ctPt.X) * 2);
-            Interval nbY = new Interval(ctPt.Y - (ctPt.Y - box.Y.T0) * 2, ctPt.Y + (box.Y.T1 - ctPt.Y) * 2);
-            //box = new Box(new Plane(ctPt, Vector3d.ZAxis), nbX, nbY, new Interval(0, 0));
-            Box newbox = BoxCenterScale(box, 2, 2, 1);
+            
             
             //box.Transform(Transform.Scale(tPlane,2));
             Interval domainX = newbox.X;
@@ -55,7 +72,9 @@ namespace EnvironmentCreation
             double length = domainX.Length;
             double width = domainY.Length;
             double distance = this.startPoint.DistanceTo(this.endPoint);
-            double DPI = distance / this.resolution;
+            double DPI = Math.Sqrt(length*length+width*width) / this.resolution;
+            if (DPI > distance / 3)
+                DPI = distance / 3;
 
             worldLength = Math.Max((int)Math.Ceiling((length - length % DPI) / DPI), 4);
             worldWidth = Math.Max((int)Math.Ceiling((width - width % DPI) / DPI), 4);
