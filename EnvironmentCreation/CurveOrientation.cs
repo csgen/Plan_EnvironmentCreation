@@ -26,8 +26,8 @@ namespace EnvironmentCreation
 
             Line line1 = new Line(centerPt, Vector3d.XAxis, 1);
             CurveIntersections crvInt1 = Intersection.CurveLine(curve, line1, 0.01, 0.01);
-            double length = crvInt1[0].PointA.DistanceTo(crvInt1[0].PointB);
-            double n = 20;
+            double length = crvInt1[0].PointB.DistanceTo(crvInt1[1].PointB);
+            double n = 30;
             
             for(int i = 1; i < n; i++)
             {
@@ -39,8 +39,8 @@ namespace EnvironmentCreation
                 
                 Line line = new Line(centerPt,xtemp,1);
                 CurveIntersections crvInt = Intersection.CurveLine(curve, line, 0.01, 0.01);
-                Point3d startPt = crvInt[0].PointA;
-                Point3d endPt = crvInt[0].PointB;
+                Point3d startPt = crvInt[0].PointB;
+                Point3d endPt = crvInt[1].PointB;
                 if (startPt.DistanceTo(endPt) <= length)
                 {
                     length = startPt.DistanceTo(endPt);
